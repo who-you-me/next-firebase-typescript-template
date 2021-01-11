@@ -10,7 +10,6 @@ const withLoginRequired = (WrappedComponent: React.FC) => {
       const user = getUserFromCookie()
       if (!user) {
         router.push('/login')
-        return
       }
     }, [])
 
