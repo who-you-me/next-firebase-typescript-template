@@ -5,7 +5,7 @@ import Layout from '../components/Layout';
 import { mapUserData } from '../utils/auth/mapUserData';
 import { setUserCookie } from '../utils/auth/userCookies';
 
-export default function Login() {
+const Login = (): JSX.Element => {
   const router = useRouter()
 
   const provider = new firebase.auth.GoogleAuthProvider();
@@ -25,3 +25,5 @@ export default function Login() {
     </Layout>
   )
 }
+
+export default Login

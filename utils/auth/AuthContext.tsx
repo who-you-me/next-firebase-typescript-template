@@ -20,7 +20,8 @@ interface IAuthContext {
 
 const AuthContext = createContext<IAuthContext>({ user: undefined, logout: () => Promise.resolve() })
 
-const AuthProvider = (props: any) => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const AuthProvider = (props: any): JSX.Element => {
   const [user, setUser] = useState<User | null | undefined>(undefined)
   const router = useRouter()
 

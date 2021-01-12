@@ -6,7 +6,7 @@ type Props = {
   title?: string
 }
 
-const Layout = ({ children, title = 'Next.js with Firabase and TypeScript Template' }: Props) => (
+const Layout = ({ children, title = 'Next.js with Firabase and TypeScript Template' }: Props): JSX.Element => (
   <div>
     <Head>
       <title>{title}</title>

@@ -3,6 +3,7 @@ import { useRouter } from "next/router"
 import { getUserFromCookie } from './userCookies'
 
 const withLoginRequired = (WrappedComponent: React.FC) => {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   return (props: any) => {
     const router = useRouter()
 

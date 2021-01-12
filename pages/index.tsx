@@ -12,7 +12,7 @@ const Index = () => {
 
   return (
     <Layout>
-      <p>You're signed in. Email: {user.email}</p>
+      <p>You&apos;re signed in. Email: {user.email}</p>
       <p
         style={{
           display: 'inline-block',
