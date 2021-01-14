@@ -1,29 +1,41 @@
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import { User } from '../../interfaces'
 import initFirebase from '../auth/initFirebase'
-import {
-  removeUserCookie,
-  setUserCookie,
-  getUserFromCookie,
-} from './userCookies'
+import { getUserFromCookie, removeUserCookie, setUserCookie } from './userCookies'
 import { mapUserData } from './mapUserData'
 
 initFirebase()
 
 interface IAuthContext {
-  user: User | null | undefined,
+  user: User | null,
+  login: () => void,
   logout: () => void
 }
 
-const AuthContext = createContext<IAuthContext>({ user: undefined, logout: () => Promise.resolve() })
+const AuthContext = createContext<IAuthContext>({
+  user: null,
+  login: () => Promise.resolve(),
+  logout: () => Promise.resolve()
+})
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const AuthProvider = (props: any): JSX.Element => {
-  const [user, setUser] = useState<User | null | undefined>(undefined)
+  const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
+
+  const provider = new firebase.auth.GoogleAuthProvider();
+  const login = () => {
+    firebase.auth().signInWithPopup(provider).then(async (result) => {
+      if (result.user) {
+        const userData = await mapUserData(result.user)
+        setUserCookie(userData)
+        router.push('/')
+      }
+    });
+  }
 
   const logout = async () => {
     return firebase
@@ -47,15 +59,11 @@ const AuthProvider = (props: any): JSX.Element => {
           setUser(userData)
         } else {
           removeUserCookie()
-          setUser(undefined)
+          setUser(null)
         }
       })
 
     const userFromCookie = getUserFromCookie()
-    if (!userFromCookie) {
-      router.push('/')
-      return
-    }
     setUser(userFromCookie)
 
     return () => {
@@ -63,11 +71,13 @@ const AuthProvider = (props: any): JSX.Element => {
     }
   }, [])
 
-  return (
-    <AuthContext.Provider value={{ user, logout }}>
-      {props.children}
-    </AuthContext.Provider>
-  )
+  return useMemo(() => {
+    return (
+      <AuthContext.Provider value={{ user, login, logout }}>
+        {props.children}
+      </AuthContext.Provider>
+    )
+  }, [props, user?.email])
 }
 
 export { AuthContext, AuthProvider }

@@ -1,23 +1,9 @@
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import { useRouter } from 'next/router';
+import { useContext } from 'react';
 import Layout from '../components/Layout';
-import { mapUserData } from '../utils/auth/mapUserData';
-import { setUserCookie } from '../utils/auth/userCookies';
+import { AuthContext } from '../utils/auth/AuthContext';
 
 const Login = (): JSX.Element => {
-  const router = useRouter()
-
-  const provider = new firebase.auth.GoogleAuthProvider();
-  const login = () => {
-    firebase.auth().signInWithPopup(provider).then(async (result) => {
-      if (result.user) {
-        const userData = await mapUserData(result.user)
-        setUserCookie(userData)
-        router.push('/')
-      }
-    });
-  }
+  const { login } = useContext(AuthContext)
 
   return (
     <Layout>
