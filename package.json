@@ -9,6 +9,8 @@
     "lint": "eslint . --ext ts --ext tsx --ext js"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.2",
+    "@material-ui/icons": "^4.11.2",
     "firebase": "^8.2.2",
     "js-cookie": "^2.2.1",
     "next": "latest",
